@@ -55,9 +55,9 @@ if [ "$(dmidecode -s system-manufacturer)" = 'Microsoft Corporation' ];then
 elif [ -e /root/StackScript ]; then
     HMUBUNTU='/root/'
 elif [ -e /home/ubuntu ]; then 
-    HMUBUNTU='/home/ubuntu/'  
+    HMUBUNTU='/root/'  
 else
-    HMUBUNTU=''
+    HMUBUNTU='/root/'
 fi
 
 verlt ${LOCAL_VERSION} ${LAST_VERSION::-1} && CPUPGRADE="Please upgrade CyberPanel version from ${LOCAL_VERSION} to ${LAST_VERSION},\nhttps://docs.litespeedtech.com/cloud/cyberpanel/#how-do-i-upgrade-cyberpanel" || CPUPGRADE="Your CyberPanel is up to date"
