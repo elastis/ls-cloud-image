@@ -127,7 +127,7 @@ install_cloudinit(){
 setup_cloud(){
     cat > ${CLDINITPATH}/per-instance.sh <<END 
 #!/bin/bash
-MAIN_URL='https://raw.githubusercontent.com/litespeedtech/ls-cloud-image/master/Cloud-init/per-instance.sh'
+MAIN_URL='https://raw.githubusercontent.com/elastis/ls-cloud-image/master/Cloud-init/per-instance.sh'
 BACK_URL='https://cloud.litespeed.sh/Cloud-init/per-instance.sh'
 STATUS_CODE=\$(curl --write-out %{http_code} -sk --output /dev/null \${MAIN_URL})
 [[ "\${STATUS_CODE}" = 200 ]] && /bin/bash <( curl -sk \${MAIN_URL} ) || /bin/bash <( curl -sk \${BACK_URL} )
@@ -157,11 +157,11 @@ cleanup (){
     rm -rf /var/tmp/*
     chmod 1777 /tmp
     #cloud-init here
-    rm -f /var/log/cloud-init.log
-    rm -f /var/log/cloud-init-output.log
-    rm -rf /var/lib/cloud/data
-    rm -rf /var/lib/cloud/instance
-    rm -rf /var/lib/cloud/instances/*
+    #rm -f /var/log/cloud-init.log
+    #rm -f /var/log/cloud-init-output.log
+    #rm -rf /var/lib/cloud/data
+    #rm -rf /var/lib/cloud/instance
+    #rm -rf /var/lib/cloud/instances/*
     #system log
     rm -rf /var/log/unattended-upgrades
     rm -f /var/log/apt/history.log*
@@ -253,9 +253,9 @@ main_claunch(){
     providerck
     check_os
     check_root
-    remove_user
+    #remove_user
     set_ssh_alive
-    install_cloudinit
+    #install_cloudinit
     setup_cloud
     cleanup
 }
