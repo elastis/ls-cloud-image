@@ -10,10 +10,13 @@ AGENT_PATH='/usr/local/aegis'
 check_os(){
     if [ -f /etc/redhat-release ] ; then
         OSNAME=centos
+        BANNERDST='/etc/profile.d/99-one-click.sh'
     elif [ -f /etc/lsb-release ] ; then
         OSNAME=ubuntu    
+        BANNERDST='/etc/update-motd.d/99-one-click'
     elif [ -f /etc/debian_version ] ; then
         OSNAME=debian
+        BANNERDST='/etc/update-motd.d/99-one-click'
     fi         
 }
 
@@ -125,12 +128,16 @@ install_cloudinit(){
 }
 
 setup_cloud(){
+    mkdir /opt/cloud/
+    curl -s https://raw.githubusercontent.com/litespeedtech/ls-cloud-image/master/Setup/domainsetup.sh -o /opt/domainsetup.sh
+    curl -s https://raw.githubusercontent.com/elastis/ls-cloud-image/master/Banner/cyberpanel -o ${BANNERDST}
+    curl -s https://raw.githubusercontent.com/elastis/ls-cloud-image/master/Cloud-init/per-instance.sh -o /opt/cloud/per-instance.sh
+    chmod +x /opt/domainsetup.sh
+    chmod +x ${BANNERDST}
+    chmod 755 /opt/cloud/per-instance.sh
     cat > ${CLDINITPATH}/per-instance.sh <<END 
 #!/bin/bash
-MAIN_URL='https://raw.githubusercontent.com/elastis/ls-cloud-image/master/Cloud-init/per-instance.sh'
-BACK_URL='https://cloud.litespeed.sh/Cloud-init/per-instance.sh'
-STATUS_CODE=\$(curl --write-out %{http_code} -sk --output /dev/null \${MAIN_URL})
-[[ "\${STATUS_CODE}" = 200 ]] && /bin/bash <( curl -sk \${MAIN_URL} ) || /bin/bash <( curl -sk \${BACK_URL} )
+/bin/bash /opt/cloud/per-instance.sh
 END
     chmod 755 ${CLDINITPATH}/per-instance.sh
 }
